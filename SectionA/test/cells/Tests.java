@@ -10,7 +10,6 @@ public class Tests {
   private static int mismatches = 0;
   private static boolean exception = false;
 
-  /*
   @Test
   public void testQuestion1() {
 
@@ -47,9 +46,7 @@ public class Tests {
     }
 
   }
-  */
 
-  /*
   @Test
   public void testQuestion2() {
 
@@ -101,9 +98,7 @@ public class Tests {
     assertTrue(!nested2.equals(nested1));
 
   }
-  */
 
-  /*
   @Test
   public void testQuestion3() {
 
@@ -167,7 +162,6 @@ public class Tests {
     assertEquals("Tuesday", unboundedBackup.get());
 
   }
-  */
 
   /*
   @Test
