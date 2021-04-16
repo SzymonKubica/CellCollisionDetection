@@ -7,12 +7,13 @@ import java.util.Scanner;
  */
 
 public class CollisionDetection {
+  private static final int NODE_CAPACITY = 4;
 
   public static void main(String[] args) throws Exception {
     String inputFile = args[0];
 
     // add and sort the 2D-objects according to the size in ascending order
-    PriorityQueueInterface<Object2D> sortedPoints = new PriorityQueue<Object2D>();
+    PriorityQueueInterface<Object2D> sortedPoints = new PriorityQueue<>();
     AABB region = readAndSortObjects(inputFile, sortedPoints);
 
     boolean collisionFree = checkObjects(sortedPoints, region);
@@ -26,7 +27,7 @@ public class CollisionDetection {
 
   /**
    * <p> Implement this method for Question 4 </p>
-   *
+   * <p>
    * // collision detection:
    * // We create a quadTree.
    * // We try to add all the 2D-objects to the quadTree.
@@ -42,9 +43,25 @@ public class CollisionDetection {
    * // true.
    */
   private static boolean checkObjects(
-      PriorityQueueInterface<Object2D> sortedPoints, AABB region) {
-    // TODO: Implement this method for Question 4
+          PriorityQueueInterface<Object2D> sortedPoints, AABB region) {
+    QuadTree tree = new QuadTree(region, NODE_CAPACITY);
+    while (!sortedPoints.isEmpty()) {
+      Object2D currentObject = sortedPoints.peek();
+      if (currentObject != null && !tree.queryRegion(getSafetyRegion(currentObject)).isEmpty()) {
+        return false;
+      }
+      if (currentObject != null) {
+        tree.add(currentObject);
+      }
+      sortedPoints.remove();
+    }
     return true;
+  }
+
+  private static AABB getSafetyRegion(Object2D object) {
+    Point2D upperLeft =  new Point2D(object.getCenter().x - object.getSize(), object.getCenter().y - object.getSize());
+    Point2D lowerRight =  new Point2D(object.getCenter().x + object.getSize(), object.getCenter().y + object.getSize());
+    return new AABB(upperLeft, lowerRight);
   }
 
 
@@ -53,8 +70,8 @@ public class CollisionDetection {
    * with respect to their size using a PrioriyQueue
    */
   private static AABB readAndSortObjects(String inputFile,
-      PriorityQueueInterface<Object2D> sortedPoints)
-      throws FileNotFoundException, Exception, PQException {
+                                         PriorityQueueInterface<Object2D> sortedPoints)
+          throws Exception {
     Scanner in = new Scanner(new File(inputFile));
     double minX, maxX, minY, maxY;
     minX = minY = Double.MAX_VALUE;
@@ -64,7 +81,7 @@ public class CollisionDetection {
       if (line.length < 3) {
         in.close();
         throw new Exception(
-            "Each point should have x-y coordinates and a size.");
+                "Each point should have x-y coordinates and a size.");
       } else {
         double x = Double.parseDouble(line[0]);
         double y = Double.parseDouble(line[1]);

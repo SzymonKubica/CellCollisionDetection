@@ -18,11 +18,10 @@ public class ParallelCollisionDetection {
     String inputFile = args[0];
 
     // add and sort the 2D-objects according to the size in ascending order
-    PriorityQueueInterface<Object2D> sortedPoints = new PriorityQueue<Object2D>();
+    PriorityQueueInterface<Object2D> sortedPoints = new PriorityQueue<>();
     AABB region = readAndSortObjects(inputFile, sortedPoints);
 
     boolean collisionFree = checkObjects(sortedPoints, region);
-    ;
 
     if (collisionFree) {
       System.out.println("Collision-free.");
@@ -34,7 +33,7 @@ public class ParallelCollisionDetection {
 
   /**
    * <p> Implement this method for Question 4 </p>
-   *
+   * <p>
    * // collision detection:
    * // We create a quadTree.
    * // We try to add all the 2D-objects to the quadTree.
@@ -50,10 +49,10 @@ public class ParallelCollisionDetection {
    * // true.
    */
   private static boolean checkObjects(
-      PriorityQueueInterface<Object2D> sortedPoints, AABB region) {
+          PriorityQueueInterface<Object2D> sortedPoints, AABB region) {
 
 
-    /* Spawn three threads that check for collisions in parallel. 
+    /* Spawn three threads that check for collisions in parallel.
      *
      * The behavior of your parallel implementation has to be functionally equivalent to the
      * sequential implementation in CollisionDetection. I.e., the value returned by
@@ -74,7 +73,7 @@ public class ParallelCollisionDetection {
      * this one
      */
 
-    
+
     return false;
 
     /*
@@ -88,8 +87,8 @@ public class ParallelCollisionDetection {
    * with respect to their size using a PrioriyQueue
    */
   private static AABB readAndSortObjects(String inputFile,
-      PriorityQueueInterface<Object2D> sortedPoints)
-      throws FileNotFoundException, Exception, PQException {
+                                         PriorityQueueInterface<Object2D> sortedPoints)
+          throws Exception {
     Scanner in = new Scanner(new File(inputFile));
     double minX, maxX, minY, maxY;
     minX = minY = Double.MAX_VALUE;
@@ -99,7 +98,7 @@ public class ParallelCollisionDetection {
       if (line.length < 3) {
         in.close();
         throw new Exception(
-            "Each point should have x-y coordinates and a size.");
+                "Each point should have x-y coordinates and a size.");
       } else {
         double x = Double.parseDouble(line[0]);
         double y = Double.parseDouble(line[1]);

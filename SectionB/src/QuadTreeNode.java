@@ -2,12 +2,12 @@
  * A quadtree node has a <i>list</i> storing objects, an <i>AABB</i>
  * representing the region it covers, and four children nodes: NW, NE, SE and
  * SW.
- *
+ * <p>
  * At any time, a quadtree node either (1) has no children (i.e., all of them
  * are null), or (2) has four children (i.e., none of them is null) and an empty
  * list of stored objects.
  */
-class QuadTreeNode {
+public class QuadTreeNode {
 
   ListInterface<Object2D> values;
   AABB region;
@@ -19,7 +19,7 @@ class QuadTreeNode {
 
   QuadTreeNode(AABB region) {
     this.region = region;
-    values = new ListArrayBased<Object2D>();
+    values = new ListArrayBased<>();
   }
 
   /**
@@ -42,7 +42,7 @@ class QuadTreeNode {
     NW = new QuadTreeNode(new AABB(region.topLeft(), region.center()));
     NE = new QuadTreeNode(new AABB(region.center(), region.topRight()));
     SE = new QuadTreeNode(
-        new AABB(region.center(), region.bottomRight()));
+            new AABB(region.center(), region.bottomRight()));
     SW = new QuadTreeNode(new AABB(region.bottomLeft(), region.center()));
   }
 }

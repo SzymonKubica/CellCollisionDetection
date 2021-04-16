@@ -5,7 +5,7 @@ import java.util.Iterator;
  */
 
 public class PriorityQueue<T extends Comparable<T>> implements
-    PriorityQueueInterface<T> {
+        PriorityQueueInterface<T> {
 
   private T[] items;             //a minHeap of elements T
   private final static int max_size = 512;
@@ -47,7 +47,7 @@ public class PriorityQueue<T extends Comparable<T>> implements
    * Adds a new entry to the priority queue according to the priority value.
    *
    * @param newEntry the new element to add to the priority queue
-   * @throws an exception if the priority queue is full
+   * @throws PQException exception if the priority queue is full
    */
   public void add(T newEntry) throws PQException {
     if (size < max_size) {
@@ -55,10 +55,7 @@ public class PriorityQueue<T extends Comparable<T>> implements
       int place = size;
       int parent = (place - 1) / 2;
       while ((parent >= 0) && (items[place].compareTo(items[parent]) < 0)) {
-        T temp = items[place];
-        items[place] = items[parent];
-        items[parent] = temp;
-        place = parent;
+        swap(place, parent);
         parent = (place - 1) / 2;
       }
       size++;
@@ -69,23 +66,50 @@ public class PriorityQueue<T extends Comparable<T>> implements
 
   /**
    * <p> Implement this method for Question 1 </p>
-   *
+   * <p>
    * Removes the element with highest priority.
    */
   public void remove() {
-    // TODO: Implement this method for Question 1
+    swap(0, size - 1);
+    items[size - 1] = null;
+    size--;
+    PQRebuild(0);
   }
 
   /**
    * <p> Implement this method for Question 1 </p>
    */
   private void PQRebuild(int root) {
-    // TODO: Implement this method for Question 1
+    int left = 2 * (root + 1) - 1;
+    int right = 2 * (root + 1);
+    if (left < size) {
+      // there is a left sub heap.
+      int smallerSubHeap;
+      if (left == size - 1) {
+        smallerSubHeap = left;
+      } else if (items[left].compareTo(items[right]) < 0) {
+        smallerSubHeap = left;
+      } else {
+        // Favours right subHeap if the keys are equal.
+        smallerSubHeap = right;
+      }
+
+      if (items[root].compareTo(items[smallerSubHeap]) > 0) {
+        swap(root, smallerSubHeap);
+        PQRebuild(smallerSubHeap);
+      }
+    }
+  }
+
+  private void swap(int index1, int index2) {
+    T temp = items[index1];
+    items[index1] = items[index2];
+    items[index2] = temp;
   }
 
 
   public Iterator<Object> iterator() {
-    return new PQIterator<Object>();
+    return new PQIterator<>();
   }
 
   private class PQIterator<T> implements Iterator<Object> {
@@ -112,7 +136,7 @@ public class PriorityQueue<T extends Comparable<T>> implements
    * Returns a priority queue that is a clone of the current priority queue.
    */
   public PriorityQueue<T> clone() {
-    PriorityQueue<T> clone = new PriorityQueue<T>();
+    PriorityQueue<T> clone = new PriorityQueue<>();
     clone.size = this.size;
     clone.items = (T[]) new Comparable[max_size];
     System.arraycopy(this.items, 0, clone.items, 0, size);
